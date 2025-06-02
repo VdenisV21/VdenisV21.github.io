@@ -1,24 +1,654 @@
-<html>
+<!DOCTYPE html>
+<html lang="hr">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hrvatsko biciklističko zaostajanje: Analiza europskih zelenih praksi</title>
     <style>
-        * {
+        :root {
+            --primary-color: #00796B; /* Teal */
+            --secondary-color: #00ACC1; /* Cyan */
+            --accent-color: #80CBC4; /* Light Teal */
+            --light-bg: #E0F2F1; /* Very Light Teal */
+            --text-color: #263238; /* Dark Blue Grey */
+            --text-light: #FFFFFF;
+            --card-bg: #FFFFFF;
+            --border-color: #B2DFDB; /* Light Teal Border */
+            --shadow-color: rgba(0, 77, 64, 0.15);
+            --link-color: #004D40; /* Darker Teal for links */
+            --link-hover-color: #00796B;
+            --critique-bg: #FFF3E0; /* Light Orange/Yellow for critique */
+            --critique-border: #FFB74D; /* Orange for critique border */
+            --critique-text-strong: #E65100; /* Darker Orange for critique strong text */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
         }
-        .imgbox {
-            display: grid;
-            height: 100%;
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--text-light);
+            padding: 3em 1em;
+            text-align: center;
+            border-bottom: 5px solid var(--accent-color);
         }
-        .center-fit {
-            max-width: 100%;
-            max-height: 100vh;
-            margin: auto;
+
+        header h1 {
+            margin: 0;
+            font-size: 2.8em;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
+
+        nav {
+            background-color: var(--primary-color);
+            padding: 0.8em 0;
+            box-shadow: 0 2px 5px var(--shadow-color);
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5em 1em;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        nav ul li a:hover, nav ul li a.active {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2em auto;
+            padding: 0 1.5em;
+        }
+
+        section {
+            background-color: var(--card-bg);
+            margin-bottom: 2.5em;
+            padding: 2em;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px var(--shadow-color);
+            border: 1px solid var(--border-color);
+        }
+
+        section h2 {
+            color: var(--primary-color);
+            font-size: 2.2em;
+            margin-top: 0;
+            padding-bottom: 0.5em;
+            border-bottom: 3px solid var(--secondary-color);
+            display: inline-block;
+        }
+        
+        section h3 {
+            color: var(--secondary-color);
+            font-size: 1.6em;
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+        }
+
+        .card {
+            background-color: var(--light-bg);
+            padding: 1.5em;
+            margin-bottom: 1.5em;
+            border-radius: 8px;
+            border-left: 5px solid var(--accent-color);
+        }
+
+        .card h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        ul.custom-bullets {
+            list-style-type: none; 
+            padding-left: 0;
+        }
+
+        ul.custom-bullets li {
+            padding-left: 1.5em;
+            position: relative;
+            margin-bottom: 0.7em;
+        }
+        
+        ul.custom-bullets li::before {
+            content: '🚴'; 
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+            font-size: 1.1em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5em;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        .comparison-table th, .comparison-table td {
+            border: 1px solid var(--border-color);
+            padding: 0.8em 1em;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .comparison-table th {
+            background-color: var(--secondary-color);
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: var(--light-bg);
+        }
+        .comparison-table tr:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+        
+        .comparison-table td.croatia-cell {
+            background-color: #FFEBEE; 
+        }
+        .comparison-table td.positive-cell {
+            background-color: #E8F5E9; 
+        }
+        .comparison-table td.neutral-cell {
+            background-color: #FFF9C4; 
+        }
+
+        .source-link, .source-list a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .source-link:hover, .source-list a:hover {
+            color: var(--link-hover-color);
+            text-decoration: underline;
+        }
+        
+        sup {
+            line-height: 0; 
+        }
+
+        .source-list {
+            padding-left: 0;
+            list-style-type: decimal;
+            margin-left: 1.5em; 
+        }
+        
+        .source-list li {
+            margin-bottom: 0.5em;
+            word-break: break-all;
+        }
+
+        .critique {
+            background-color: var(--critique-bg); 
+            border-left: 5px solid var(--critique-border); 
+            padding: 1em 1.5em;
+            margin: 1.5em 0;
+            border-radius: 4px;
+        }
+
+        .critique strong {
+            color: var(--critique-text-strong); 
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5em 0;
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            margin-top: 2em;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+            nav ul li {
+                display: block;
+                margin: 5px 0;
+            }
+            nav ul li a {
+                display: block;
+            }
+            .comparison-table {
+                display: block;
+                overflow-x: auto; 
+            }
+            .comparison-table th, .comparison-table td {
+                white-space: normal; 
+            }
+        }
+
     </style>
 </head>
 <body>
-<div class="imgbox">
-    <img class="center-fit" src="test_image.jpg">
-</div>
+
+    <header>
+        <h1>Hrvatsko biciklističko zaostajanje: Analiza europskih zelenih praksi</h1>
+        <p style="font-size: 1.2em; margin-top: 0.5em;">Otkrivanje nedostataka u podršci biciklizmu u usporedbi s vodećim zemljama</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#intro">Uvod</a></li>
+            <li><a href="#croatia">Hrvatska</a></li>
+            <li><a href="#slovenia">Slovenija</a></li>
+            <li><a href="#austria">Austrija</a></li>
+            <li><a href="#france">Francuska</a></li>
+            <li><a href="#germany">Njemačka</a></li>
+            <li><a href="#comparison">Usporedba</a></li>
+            <li><a href="#conclusion">Zaključak</a></li>
+            <li><a href="#sources_section">Izvori</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <section id="intro">
+            <h2>Uvod: Hitna potreba za politikama koje potiču biciklizam</h2>
+            <p>Dok europske nacije sve više zagovaraju održivi prijevoz, bicikl se nameće kao kamen temeljac moderne urbane mobilnosti i dobrobiti zaposlenika. Snažni sustavi podrške – od poreznih poticaja do razvoja infrastrukture – ključni su za stvaranje okruženja pogodnog za bicikliste. Ova analiza bavi se stanjem korporativnog biciklizma u Hrvatskoj, Sloveniji, Austriji, Francuskoj i Njemačkoj, s kritičkim osvrtom na trenutni položaj Hrvatske.</p>
+            <p class="critique">Središnja teza ovog izvješća jest istaknuti <strong>značajne nedostatke Hrvatske u pružanju sveobuhvatne i privlačne podrške korištenju bicikala</strong>, posebno u usporedbi s proaktivnim mjerama koje su usvojile druge europske zemlje. Cilj je naglasiti područja u kojima Hrvatska može, i mora, napredovati kako bi uhvatila korak i istinski prihvatila prednosti biciklističke kulture.</p>
+        </section>
+
+        <section id="croatia">
+            <h2>Hrvatska: Kretanje kroz krajolik propuštenih biciklističkih prilika</h2>
+            <p>Pristup Hrvatske korporativnom biciklizmu u 2025. godini otkriva neke početne inicijative, ali ga uglavnom karakterizira nedostatak kohezivne nacionalne strategije i ograničeni izravni poticaji, što je stavlja u nepovoljan položaj u usporedbi s progresivnijim europskim nacijama.</p>
+
+            <h3>Poticanje bicikliranja zaposlenika od strane tvrtki</h3>
+            <div class="card">
+                <h4>Porezni tretman bicikala koje tvrtke osiguravaju zaposlenicima:</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Neoporezivi "Dar u naravi":</strong> Tvrtke mogu zaposlenicima osigurati bicikle kao neoporezivi dar do godišnje vrijednosti od 133 € (uključujući PDV) po zaposleniku. Ovo je opća odredba, nije specifična za bicikle. Svaka vrijednost koja prelazi 133 € općenito se smatra oporezivim dohotkom za zaposlenika.<sup><a href="#source-1" class="source-link">[1]</a></sup></li>
+                    <li><strong>Priznati poslovni trošak:</strong> Bicikli neophodni za poslovne aktivnosti (npr. teretni bicikli za logistiku) mogu se tretirati kao priznati operativni troškovi ili imovina koja podliježe amortizaciji (10% godišnje amortizacije, potencijalno udvostručeno, za imovinu preko 665 €).<sup><a href="#source-2" class="source-link">[2]</a></sup> Ako se osiguravaju isključivo kao pogodnost zaposleniku koja premašuje limit dara od 133 €, priznavanje troška je manje jednostavno i može se tretirati kao trošak rada ako se višak oporezuje kao primitak zaposlenika.</li>
+                </ul>
+                <p class="critique"><strong>Kritički osvrt:</strong> Godišnji limit od 133 € za neoporezivi "dar u naravi" izuzetno je nizak za kupnju modernog bicikla i nije namjenski biciklistički poticaj. To je zanemarivo u usporedbi s <strong>Austrijom</strong> koja nudi potpuno neoporezive bicikle kao pogodnost u naravi (€0 Sachbezug)<sup><a href="#source-21" class="source-link">[21]</a></sup>, <strong>Slovenijom</strong> koja oslobađa od poreza bicikle koje osigurava tvrtka do vrijednosti od 2.000 €<sup><a href="#source-13" class="source-link">[13]</a></sup>, ili <strong>Njemačkom</strong> gdje su bicikli potpuno neoporezivi ako se daju kao dodatak na plaću.<sup><a href="#source-38" class="source-link">[38]</a></sup></p>
+            </div>
+
+            <div class="card">
+                <h4>Doprinosi poslodavca za troškove putovanja zaposlenika na posao:</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Nepostojanje namjenske naknade za putovanje biciklom na posao:</strong> Hrvatska primjetno nema specifičnu neoporezivu naknadu za putovanje biciklom na posao.<sup><a href="#source-1" class="source-link">[1]</a></sup></li>
+                    <li><strong>Naknada za javni prijevoz:</strong> Neoporeziva naknada prvenstveno je za karte lokalnog/međugradskog javnog prijevoza.<sup><a href="#source-1" class="source-link">[1]</a></sup> Ako javni prijevoz nije dostupan, naknada se temelji na usporedivim udaljenostima gdje je organiziran.<sup><a href="#source-3" class="source-link">[3]</a></sup></li>
+                    <li><strong>Naknade po kilometru:</strong> Stopa po kilometru temeljena na gorivu (0,16 € od ožujka 2025.) za državne/javne službenike prema kolektivnim ugovorima nije namijenjena općem putovanju biciklom na posao.<sup><a href="#source-4" class="source-link">[4]</a></sup> Postoji naknada od 0,50 €/km za korištenje privatnog automobila za službena putovanja ("loco vožnja"), ali ne i za svakodnevno putovanje biciklom na posao.<sup><a href="#source-5" class="source-link">[5]</a></sup></li>
+                </ul>
+                 <p class="critique"><strong>Kritički osvrt:</strong> Nepostojanje namjenske naknade za putovanje biciklom na posao u Hrvatskoj veliki je demotivirajući faktor. Zaposlenici koji odaberu bicikliranje ne dobivaju nikakvo specifično financijsko priznanje, za razliku od situacije u <strong>Francuskoj</strong> (Forfait Mobilités Durables do 600-900 € godišnje)<sup><a href="#source-30" class="source-link">[30]</a></sup>, <strong>Njemačkoj</strong> (mogućnost traženja Pendlerpauschale od 0,30-0,38 €/km)<sup><a href="#source-42" class="source-link">[42]</a></sup>, <strong>Sloveniji</strong> (neovisno o načinu prijevoza, 0,21 €/km ili paušal do 140 € mjesečno)<sup><a href="#source-15" class="source-link">[15]</a></sup>, ili <strong>Austriji</strong> (pravo na Pendlerpauschale za korisnike službenih bicikala i 0,50 €/km za poslovna putovanja privatnim biciklom).<sup><a href="#source-24" class="source-link">[24]</a></sup></p>
+            </div>
+            
+            <h3>Poticaji za biciklistički sektor i komercijalne biciklističke operacije</h3>
+             <div class="card">
+                <h4>Okvir poreza na dodanu vrijednost (PDV):</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Standardna stopa PDV-a:</strong> Visoka standardna stopa PDV-a od 25% primjenjuje se na bicikle, komponente i usluge popravka, jer nisu navedeni za snižene stope.<sup><a href="#source-6" class="source-link">[6]</a></sup></li>
+                </ul>
+                <p class="critique"><strong>Kritički osvrt:</strong> Hrvatskih 25% PDV-a na bicikle i, što je ključno, na usluge popravka, čini bicikliranje skupljim i obeshrabruje održavanje. To je u oštroj suprotnosti sa <strong>Slovenijom</strong> (9,5% PDV-a na popravke)<sup><a href="#source-16" class="source-link">[16]</a></sup> i <strong>Austrijom</strong> (10% PDV-a na popravke)<sup><a href="#source-27" class="source-link">[27]</a></sup>, koje aktivno podržavaju pristupačnost održavanja. Iako <strong>Njemačka</strong> (19%)<sup><a href="#source-45" class="source-link">[45]</a></sup> i <strong>Francuska</strong> (20%)<sup><a href="#source-32" class="source-link">[32]</a></sup> također primjenjuju standardne stope na popravke, sama standardna stopa u Hrvatskoj najviša je među uspoređenim zemljama.</p>
+            </div>
+            <div class="card">
+                <h4>Financijska podrška i programi bespovratnih sredstava:</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Nacionalni plan oporavka i otpornosti (NPOO):</strong> Nudi potencijalno financiranje za projekte održivog prijevoza, ali specifičnosti za korporativni biciklizam nisu zajamčene.<sup><a href="#source-7" class="source-link">[7]</a></sup></li>
+                    <li><strong>Fond za zaštitu okoliša i energetsku učinkovitost (FZOEU):</strong>
+                        <ul class="custom-bullets" style="padding-left: 1em; margin-top: 0.5em;">
+                            <li style="font-size:0.9em;">Stavka 35 ("Poziv za sufinanciranje kupnje vozila na alternativna goriva"): 21 milijun € (Q2 2025.) za pravne osobe; prihvatljivost e-bicikala/teretnih bicikala ovisi o definiciji poziva.<sup><a href="#source-8" class="source-link">[8]</a></sup></li>
+                            <li style="font-size:0.9em;">Stavka 28 ("Ulaganje u cestovni promet s nultim emisijama stakleničkih plinova"): 45 milijuna € (Q4 2025.) cilja na pružatelje usluga sustava javnih bicikala i mogla bi uključivati teretne e-bicikle za dostavne tvrtke.<sup><a href="#source-8" class="source-link">[8]</a></sup></li>
+                        </ul>
+                    </li>
+                    <li><strong>Inicijative lokalne samouprave:</strong> Očekuju se Planovi održive urbane mobilnosti (SUMP), ali konkretni financijski poticaji za tvrtke nisu istaknuti.<sup><a href="#source-9" class="source-link">[9]</a></sup></li>
+                </ul>
+                 <p class="critique"><strong>Kritički osvrt:</strong> Iako u Hrvatskoj postoje određena sredstva, ona su često projektnog karaktera, natjecateljska i nisu specifično prilagođena niti lako dostupna općim poduzećima koja žele promovirati bicikliranje zaposlenika ili usvojiti teretne bicikle. To se razlikuje od austrijskog programa "klimaaktiv mobil" koji nudi izravne subvencije (npr. do 900 € po teretnom biciklu)<sup><a href="#source-28" class="source-link">[28]</a></sup> ili njemačkog BAFA programa (do 3.500 € po e-teretnom biciklu).<sup><a href="#source-46" class="source-link">[46]</a></sup> Čak se i <strong>Francuska</strong>, unatoč ukidanju nacionalnog bonusa, fokusira na regionalne potpore i povrat PDV-a za teretne bicikle.<sup><a href="#source-33" class="source-link">[33]</a></sup></p>
+            </div>
+
+            <h3>Regulatorno okruženje</h3>
+            <div class="card">
+                <h4>Biciklistička infrastruktura i obveze tvrtki:</h4>
+                <ul class="custom-bullets">
+                    <li><strong>"Pravilnik o biciklističkoj infrastrukturi":</strong> Propisuje minimalne kapacitete za parkiranje bicikala za određene nove komercijalne i javne objekte (npr. 1 mjesto na 100 m² za urede). Parkiralište mora biti sigurno, dostupno i dobro osvijetljeno.<sup><a href="#source-10" class="source-link">[10]</a></sup></li>
+                </ul>
+            </div>
+             <div class="card">
+                <h4>Sigurnosni propisi:</h4>
+                 <ul class="custom-bullets">
+                    <li><strong>Zakoni o kacigama:</strong> Obvezne za bicikliste mlađe od 16 godina.<sup><a href="#source-11" class="source-link">[11]</a></sup></li>
+                    <li><strong>Vidljivost:</strong> Reflektirajući prsluk/odjeća obvezni noću i u uvjetima smanjene vidljivosti za sve bicikliste. Obavezna svjetla moraju se koristiti.<sup><a href="#source-11" class="source-link">[11]</a></sup></li>
+                    <li><strong>Slušalice:</strong> Zabranjeno je korištenje slušalica tijekom vožnje.<sup><a href="#source-12" class="source-link">[12]</a></sup></li>
+                 </ul>
+            </div>
+        </section>
+
+        <section id="slovenia">
+            <h2>Slovenija: Hvatanje zamaha mjerama za poticanje biciklizma</h2>
+            <p>Slovenija aktivno promiče održivu mobilnost, nudeći opipljive financijske prednosti za usvajanje bicikala, posebno kroz nedavne porezne promjene koje su povoljnije od hrvatskih.</p>
+
+            <h3>Poticaji i porezne olakšice</h3>
+            <div class="card">
+                <h4>Porezni tretman bicikala koje osigurava tvrtka:</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Izuzeće od oporezivanja kao primitak u naravi (Boniteta):</strong> Od 1. siječnja 2025., bicikli koje poslodavac osigurava zaposlenicima ne smatraju se oporezivim primitkom u naravi ako njihova nabavna vrijednost (uklj. PDV) ne prelazi 2.000 EUR i ako se osiguravaju najviše jednom u pet godina po zaposleniku.<sup><a href="#source-13" class="source-link">[13]</a>, <a href="#source-14" class="source-link">[14]</a></sup> Ovo je značajan napredak u odnosu na ograničeni hrvatski opći darovni limit od 133 €.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>Putovanje zaposlenika biciklom na posao i naknada troškova:</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Naknada troškova putovanja na posao:</strong> Poslodavci mogu osigurati neoporezivu naknadu troškova putovanja na posao u iznosu od 0,21 EUR po punom kilometru (za udaljenosti >1 km). Ako je mjesečni ukupni iznos manji od 140 EUR, može se osigurati neoporezivi paušalni iznos do 140 EUR/mjesečno.<sup><a href="#source-15" class="source-link">[15]</a></sup> Ovo je neovisno o načinu prijevoza i odnosi se na bicikliste, nudeći prednost u odnosu na nedostatak specifične podrške za putovanje biciklom na posao u Hrvatskoj.</li>
+                </ul>
+            </div>
+
+            <h3>Financijska podrška i PDV</h3>
+            <div class="card">
+                <h4>Stope PDV-a:</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Standardna stopa:</strong> 22% na nove bicikle i dijelove.<sup><a href="#source-16" class="source-link">[16]</a></sup></li>
+                    <li><strong>Snižena stopa:</strong> Značajno niža stopa od 9,5% primjenjuje se na "manje popravke bicikala".<sup><a href="#source-16" class="source-link">[16]</a>, <a href="#source-17" class="source-link">[17]</a></sup> Ovo je ključna podrška za bicikliste koja nedostaje u Hrvatskoj (25% na popravke).</li>
+                </ul>
+            </div>
+             <div class="card">
+                <h4>Mogućnosti financiranja:</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Subvencije za kupnju e-bicikala (Borzen/Eko Sklad):</strong> Prvenstveno za fizičke osobe, ali ukazuje na vladinu podršku e-mobilnosti (npr. teretni e-bicikli: 30% maloprodajne cijene, max. 1.000 EUR).<sup><a href="#source-18" class="source-link">[18]</a></sup></li>
+                    <li><strong>Porezna olakšica za zelenu/digitalnu tranziciju:</strong> 40% porezne olakšice za poduzeća na ulaganja u projekte digitalne i zelene tranzicije, potencijalno uključujući e-teretne bicikle.<sup><a href="#source-19" class="source-link">[19]</a>, <a href="#source-20" class="source-link">[20]</a></sup></li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="austria">
+            <h2>Austrija: Postavlja najviše standarde za korporativni biciklizam</h2>
+            <p>Austrija se može pohvaliti izuzetno povoljnim okruženjem za korporativni biciklizam, sa značajnim poreznim prednostima i programima bespovratnih sredstava koji je stavljaju daleko ispred Hrvatske.</p>
+
+            <h3>Optimizacija mobilnosti zaposlenika</h3>
+            <div class="card">
+                <h4>Porezni okvir za bicikle koje osigurava poslodavac:</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Sachbezug (Primitak u naravi): Vrijednost 0 €</strong> za bicikle bez emisija (konvencionalne ili e-bicikle) koje poslodavac osigurava za privatnu upotrebu, uključujući putovanje na posao. Nema poreza na plaću niti doprinosa za socijalno osiguranje za zaposlenika.<sup><a href="#source-21" class="source-link">[21]</a>, <a href="#source-22" class="source-link">[22]</a></sup> Ovo je veliki poticaj, u oštroj suprotnosti s minimalnom hrvatskom naknadom od 133 €.</li>
+                    <li><strong>Pretvaranje plaće (Gehaltsumwandlung):</strong> Dopušteno za (e-)bicikle, zadržavajući Sachbezug od 0 €.<sup><a href="#source-23" class="source-link">[23]</a></sup></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>Putovanje biciklom na posao i troškovi poslovnih putovanja:</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Pendlerpauschale & Pendlereuro:</strong> Zaposlenici koji koriste službene bicikle za putovanje na posao i dalje imaju pravo na ove naknade.<sup><a href="#source-24" class="source-link">[24]</a></sup></li>
+                    <li><strong>Kilometergeld (Poslovna putovanja privatnim biciklom):</strong> Od 1. siječnja 2025., 0,50 €/km, najviše 3.000 km/godišnje (maks. 1.500 €).<sup><a href="#source-24" class="source-link">[24]</a>, <a href="#source-25" class="source-link">[25]</a></sup> Ovo specifično priznavanje korištenja privatnog bicikla u poslovne svrhe nedostaje u Hrvatskoj.</li>
+                </ul>
+            </div>
+
+            <h3>Poticaji za biciklističku industriju i komercijalnu upotrebu</h3>
+            <div class="card">
+                <h4>PDV krajolik:</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Standardna stopa PDV-a:</strong> 20% na prodaju novih bicikala.<sup><a href="#source-26" class="source-link">[26]</a></sup></li>
+                    <li><strong>Snižena stopa PDV-a (10%):</strong> Za usluge popravka bicikala (uklj. e-bicikle) ako trošak materijala < 50% ukupnog troška popravka.<sup><a href="#source-27" class="source-link">[27]</a></sup> Još jedna ključna mjera podrške koja nedostaje Hrvatskoj (25% na popravke).</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>Programi bespovratnih sredstava i subvencije ("klimaaktiv mobil"):</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Komercijalni (e-)teretni bicikli:</strong> 30% prihvatljivih troškova, maks. 900 €/bicikl.<sup><a href="#source-28" class="source-link">[28]</a></sup></li>
+                    <li><strong>"Jobräder" (min. 5 e-bicikala):</strong> 300 €/e-bicikl.<sup><a href="#source-29" class="source-link">[29]</a></sup></li>
+                    <li><strong>Subvencije za parkirališta za bicikle i infrastrukturu za punjenje e-bicikala.</strong><sup><a href="#source-29" class="source-link">[29]</a></sup></li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="france">
+            <h2>Francuska: Strateški pomaci prema održivoj mobilnosti</h2>
+            <p>Francuska aktivno transformira svoje okruženje za korporativni biciklizam, krećući se prema strukturnoj podršci, poreznim prednostima i regulatornim pokretačima, iako su se neke izravne subvencije nedavno promijenile.</p>
+
+            <h3>Pogodnosti za zaposlenike koje osigurava poslodavac</h3>
+            <div class="card">
+                <h4>Financijska podrška za putovanje zaposlenika biciklom na posao:</h4>
+                <ul class="custom-bullets">
+                    <li><strong>"Forfait Mobilités Durables" (FMD - Paušal za održivu mobilnost):</strong> Izuzeće od doprinosa za socijalno osiguranje i poreza na dohodak do 600 €/godišnje/zaposleniku (ili 900 € ako se kombinira s naknadom za javni prijevoz). Obuhvaća mehaničke/električne bicikle.<sup><a href="#source-30" class="source-link">[30]</a></sup> Ovo je značajna, fleksibilna naknada koja nedostaje u Hrvatskoj.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>Vozni parkovi bicikala u tvrtkama:</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Porezno umanjenje za vozne parkove bicikala (do 31. prosinca 2027.):</strong> Tvrtke mogu ostvariti porezno umanjenje za troškove osiguravanja besplatnih voznih parkova bicikala zaposlenicima za putovanje na posao, ograničeno na 25% troškova kupnje/najma s uključenim porezom.<sup><a href="#source-31" class="source-link">[31]</a></sup></li>
+                </ul>
+            </div>
+
+            <h3>Mehanizmi podrške za poduzeća</h3>
+            <div class="card">
+                <h4>Okvir poreza na dodanu vrijednost (PDV):</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Standardna stopa PDV-a (20%):</strong> Primjenjuje se na prodaju novih/rabljenih bicikala i opće usluge popravka.<sup><a href="#source-32" class="source-link">[32]</a></sup> (Nema spomena snižene stope za popravke, za razliku od Austrije/Slovenije).</li>
+                    <li><strong>Povrat PDV-a za teretne bicikle:</strong> PDV se može povratiti za teretne bicikle klasificirane kao "utilitaire" (gospodarska vozila) koji se koriste u profesionalne svrhe.<sup><a href="#source-33" class="source-link">[33]</a>, <a href="#source-34" class="source-link">[34]</a></sup></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>Obveze vezane za infrastrukturu:</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Obveze za parkiranje bicikala:</strong> Stroge odredbe za nove i postojeće zgrade (npr. novi industrijski/tercijarni objekti: parkiralište za 15% zaposlenika).<sup><a href="#source-35" class="source-link">[35]</a></sup></li>
+                </ul>
+            </div>
+             <div class="card">
+                <h4>Šire politike:</h4>
+                 <ul class="custom-bullets">
+                    <li><strong>"Plan Vélo et Marche 2023-2027" (Plan za biciklizam i pješačenje):</strong> Nacionalna strategija s 2 milijarde € državnih ulaganja za biciklističku infrastrukturu i podršku industriji.<sup><a href="#source-36" class="source-link">[36]</a></sup></li>
+                    <li><strong>"Plan de Mobilité Employeur" (PDMe - Plan mobilnosti poslodavca):</strong> Obvezan za tvrtke s ≥50 zaposlenika na jednoj lokaciji u određenim područjima, mora uključivati promicanje biciklizma.<sup><a href="#source-37" class="source-link">[37]</a></sup></li>
+                 </ul>
+            </div>
+        </section>
+
+        <section id="germany">
+            <h2>Njemačka: Potaknuta sveobuhvatnom podrškom biciklizmu</h2>
+            <p>Njemačka ima dobro uspostavljen i izuzetno povoljan okvir za promicanje korištenja bicikala, posebno kroz sheme "Dienstrad" (službeni bicikl), s ključnim poreznim olakšicama osiguranim do 2030. godine.</p>
+
+            <h3>Korištenje bicikala koje omogućuje poslodavac ("Dienstrad")</h3>
+            <div class="card">
+                <h4>Porezni okvir za bicikle koje osigurava tvrtka:</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Pravilo 0,25% (Pretvaranje plaće):</strong> Za bicikle putem pretvaranja plaće, privatno korištenje je oporeziva pogodnost u naravi temeljena na 0,25% četvrtine preporučene maloprodajne cijene.<sup><a href="#source-38" class="source-link">[38]</a>, <a href="#source-39" class="source-link">[39]</a></sup></li>
+                    <li><strong>Neoporezivi bicikli ("Dodatak na plaću"):</strong> Ako poslodavac osigura bicikl uz redovnu plaću, privatno korištenje potpuno je neoporezivo do 31. prosinca 2030.<sup><a href="#source-38" class="source-link">[38]</a></sup> Ovo je snažan poticaj koji daleko premašuje ograničenu hrvatsku ponudu od 133 €.</li>
+                    <li><strong>Operativni troškovi:</strong> Troškovi kupnje/najma, održavanja i popravaka 100% su porezno priznati za poslodavce.<sup><a href="#source-40" class="source-link">[40]</a>, <a href="#source-41" class="source-link">[41]</a></sup></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>Naknada za putovanje na posao (Pendlerpauschale):</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Stope za 2025.:</strong> 0,30 €/km za prvih 20 km, 0,38 €/km od 21. km. Zaposlenici koji koriste "Jobrad" i dalje mogu tražiti ovu naknadu.<sup><a href="#source-42" class="source-link">[42]</a>, <a href="#source-43" class="source-link">[43]</a>, <a href="#source-39" class="source-link">[39]</a></sup> Ova specifična podrška za putovanje biciklom na posao nedostaje u Hrvatskoj.</li>
+                </ul>
+            </div>
+
+            <h3>Financijska podrška i PDV</h3>
+             <div class="card">
+                <h4>Porez na dodanu vrijednost (PDV):</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Prodaja i popravci:</strong> Standardna stopa PDV-a od 19% primjenjuje se na prodaju i usluge popravka/održavanja. Njemačka nije implementirala EU opciju za sniženu stopu na popravke.<sup><a href="#source-44" class="source-link">[44]</a>, <a href="#source-45" class="source-link">[45]</a></sup></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>Programi financiranja:</h4>
+                <ul class="custom-bullets">
+                    <li><strong>Savezna subvencija za e-teretne bicikle (BAFA program):</strong> Bespovratna sredstva od 25% neto troškova nabave, maks. 3.500 €/bicikl za komercijalnu/komunalnu upotrebu. Traje od 1. listopada 2024. do 30. lipnja 2027.<sup><a href="#source-46" class="source-link">[46]</a></sup> Takve izravne subvencije nisu tako jasno definirane niti velikodušne u Hrvatskoj.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="comparison">
+            <h2>Velika europska biciklistička usporedba: Gdje je Hrvatska?</h2>
+            <p>Ovaj usporedni pregled jasno ilustrira razlike u podršci korporativnom i općem biciklizmu među odabranim nacijama. Položaj Hrvatske često ukazuje na potrebu za ambicioznijim politikama.</p>
+            
+            <div class="comparison-table-container">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Značajka / Poticaj</th>
+                            <th>Hrvatska</th>
+                            <th>Slovenija</th>
+                            <th>Austrija</th>
+                            <th>Francuska</th>
+                            <th>Njemačka</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Neoporezivi službeni bicikl za zaposlenika (Primitak u naravi)</strong></td>
+                            <td class="croatia-cell">Ograničeno na 133 €/godišnje kao opći "dar u naravi", nije specifično za bicikle. Vrijednost iznad toga je oporeziva.<sup><a href="#source-1" class="source-link">[1]</a></sup></td>
+                            <td class="positive-cell">Da, bicikli koje osigurava poslodavac nisu oporezivi primitak u naravi ako nabavna vrijednost ≤ 2.000 € (uklj. PDV), najviše jednom u 5 godina.<sup><a href="#source-13" class="source-link">[13]</a>, <a href="#source-14" class="source-link">[14]</a></sup></td>
+                            <td class="positive-cell">Da, Sachbezug (primitak u naravi) vrijednosti 0 € za bicikle bez emisija koje poslodavac osigurava za privatnu upotrebu (uklj. putovanje na posao). Nema poreza na plaću/socijalnih doprinosa.<sup><a href="#source-21" class="source-link">[21]</a>, <a href="#source-22" class="source-link">[22]</a></sup></td>
+                            <td class="neutral-cell">Podržano putem "Forfait Mobilités Durables" (vidi dolje) i smanjenja poreza na dobit za tvrtke za vozne parkove koji se besplatno daju zaposlenicima (ograničeno na 25% troškova nabave/najma).<sup><a href="#source-30" class="source-link">[30]</a>, <a href="#source-31" class="source-link">[31]</a></sup></td>
+                            <td class="positive-cell">Da, potpuno neoporezivo ako se daje "povrh" plaće. Ako putem pretvaranja plaće, povoljno pravilo "0,25%" za oporezivanje privatnog korištenja.<sup><a href="#source-38" class="source-link">[38]</a></sup></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Specifična naknada za putovanje biciklom na posao</strong></td>
+                            <td class="croatia-cell">Nema namjenske naknade za putovanje biciklom na posao. Naknada uglavnom za javni prijevoz.<sup><a href="#source-1" class="source-link">[1]</a></sup></td>
+                            <td class="positive-cell">Neoporeziva naknada troškova putovanja na posao neovisna o načinu prijevoza, 0,21 €/km, ili paušal do 140 €/mjesečno ako je mjesečni ukupni iznos < 140 €.<sup><a href="#source-15" class="source-link">[15]</a></sup></td>
+                            <td class="positive-cell">Zaposlenici koji koriste službene bicikle za putovanje na posao i dalje imaju pravo na opću "Pendlerpauschale" (naknada za putnike). Privatni bicikl za poslovna putovanja: 0,50 €/km.<sup><a href="#source-24" class="source-link">[24]</a>, <a href="#source-25" class="source-link">[25]</a></sup></td>
+                            <td class="positive-cell">"Forfait Mobilités Durables" (Paušal za održivu mobilnost) do 600 €/godišnje/zaposleniku (ili 900 € ako se kombinira s javnim prijevozom), oslobođeno poreza/socijalnih doprinosa.<sup><a href="#source-30" class="source-link">[30]</a></sup></td>
+                            <td class="positive-cell">Biciklisti mogu tražiti "Pendlerpauschale" (naknada za putnike) od 0,30 €/km (prvih 20 km) i 0,38 €/km (od 21. km).<sup><a href="#source-42" class="source-link">[42]</a>, <a href="#source-43" class="source-link">[43]</a></sup></td>
+                        </tr>
+                        <tr>
+                            <td><strong>PDV na kupnju bicikla</strong></td>
+                            <td class="croatia-cell">25% (Standardna stopa)<sup><a href="#source-6" class="source-link">[6]</a></sup></td>
+                            <td>22% (Standardna stopa)<sup><a href="#source-16" class="source-link">[16]</a></sup></td>
+                            <td>20% (Standardna stopa)<sup><a href="#source-26" class="source-link">[26]</a></sup></td>
+                            <td>20% (Standardna stopa)<sup><a href="#source-32" class="source-link">[32]</a></sup></td>
+                            <td>19% (Standardna stopa)<sup><a href="#source-44" class="source-link">[44]</a></sup></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sniženi PDV na popravke bicikala</strong></td>
+                            <td class="croatia-cell">Ne (Primjenjuje se standardnih 25%)<sup><a href="#source-6" class="source-link">[6]</a></sup></td>
+                            <td class="positive-cell">Da (9,5% snižena stopa za manje popravke bicikala)<sup><a href="#source-16" class="source-link">[16]</a>, <a href="#source-17" class="source-link">[17]</a></sup></td>
+                            <td class="positive-cell">Da (10% snižena stopa ako je trošak materijala < 50% ukupnog troška)<sup><a href="#source-27" class="source-link">[27]</a></sup></td>
+                            <td class="neutral-cell">Ne (Primjenjuje se standardnih 20%)<sup><a href="#source-32" class="source-link">[32]</a></sup></td>
+                            <td class="neutral-cell">Ne (Primjenjuje se standardnih 19%, unatoč zagovaranju)<sup><a href="#source-45" class="source-link">[45]</a></sup></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Značajna nacionalna bespovratna sredstva za e-bicikle/teretne bicikle tvrtki</strong></td>
+                            <td class="croatia-cell">Ograničeno; prihvatljivost ovisi o općim pozivima FZOEU-a za "vozila na alternativna goriva" ili "prijevoz s nultim emisijama", nije specifično/zajamčeno za široko usvajanje službenih bicikala.<sup><a href="#source-8" class="source-link">[8]</a></sup></td>
+                            <td class="neutral-cell">Porezna olakšica za zelenu tranziciju; Subvencije za kupnju e-bicikala prvenstveno za fizičke osobe (npr. teretni e-bicikli 30%, maks. 1.000 €).<sup><a href="#source-18" class="source-link">[18]</a>, <a href="#source-19" class="source-link">[19]</a></sup></td>
+                            <td class="positive-cell">Da, program "klimaaktiv mobil": npr. 30% troškova, maks. 900 €/komercijalni e-teretni bicikl; 300 €/e-bicikl za sheme "Jobrad".<sup><a href="#source-28" class="source-link">[28]</a>, <a href="#source-29" class="source-link">[29]</a></sup></td>
+                            <td class="neutral-cell">Nacionalni "bonus écologique" (npr. do 1.000 € za teretne bicikle za pravne osobe) ukinut u veljači 2025. Fokus sada na lokalnim/regionalnim potporama i povratu PDV-a na "utilitaire" teretne bicikle.<sup><a href="#source-33" class="source-link">[33]</a>, <a href="#source-34" class="source-link">[34]</a></sup></td>
+                            <td class="positive-cell">Da, BAFA program za e-teretne bicikle: 25% neto troškova nabave, maks. 3.500 €/bicikl za komercijalnu/komunalnu upotrebu (do lipnja 2027.).<sup><a href="#source-46" class="source-link">[46]</a></sup></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Obvezno parkiranje bicikala u novim/obnovljenim zgradama (Općenito)</strong></td>
+                            <td>Da, "Pravilnik o biciklističkoj infrastrukturi" propisuje minimume (npr. 1 mjesto/100 m² ureda za nove komercijalne objekte).<sup><a href="#source-10" class="source-link">[10]</a></sup></td>
+                            <td>"Pravilnik o kolesarskih površinah" postavlja tehničke standarde; SUMP-ovi pokreću lokalne zahtjeve.<sup><a href="#source-47" class="source-link">[47]</a></sup></td>
+                            <td class="positive-cell">Da, npr. Bečki građevinski zakonik propisuje 1 mjesto/10 radnih mjesta za nove nestambene objekte.<sup><a href="#source-48" class="source-link">[48]</a></sup></td>
+                            <td class="positive-cell">Da, Građevinski zakonik propisuje za nove/obnovljene zgrade (npr. novi tercijarni objekti: parkiralište za 15% zaposlenika).<sup><a href="#source-35" class="source-link">[35]</a></sup></td>
+                            <td class="positive-cell">Da, zahtjevi variraju ovisno o Državnim građevinskim propisima (Landesbauordnungen - LBO) za nove/obnovljene zgrade.<sup><a href="#source-49" class="source-link">[49]</a></sup></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="critique" style="margin-top: 1.5em;">
+                <p><strong>Ključna usporedna zapažanja:</strong> Hrvatska dosljedno zaostaje u nuđenju izravnih, učinkovitih financijskih poticaja kako za zaposlenike koji odaberu bicikliranje, tako i za poslodavce koji ih žele podržati. 
+                Primjerice, hrvatski limit od 133 € za "dar u naravi" za službene bicikle<sup><a href="#source-1" class="source-link">[1]</a></sup> zanemariv je u usporedbi s potpuno neoporezivim službenim biciklima u <strong>Austriji</strong> (€0 Sachbezug)<sup><a href="#source-21" class="source-link">[21]</a></sup>, neoporezivim pragom od 2.000 € u <strong>Sloveniji</strong><sup><a href="#source-13" class="source-link">[13]</a></sup>, te neoporezivim biciklima kao "dodatkom na plaću" ili povoljnim pravilom od 0,25% u <strong>Njemačkoj</strong>.<sup><a href="#source-38" class="source-link">[38]</a></sup>
+                Slično tome, nepostojanje namjenske naknade za putovanje biciklom na posao u Hrvatskoj<sup><a href="#source-1" class="source-link">[1]</a></sup> u oštroj je suprotnosti s francuskim "Forfait Mobilités Durables" (do 600-900 €/godišnje)<sup><a href="#source-30" class="source-link">[30]</a></sup>, njemačkom "Pendlerpauschale"<sup><a href="#source-42" class="source-link">[42]</a></sup>, slovenskom opcijom po kilometru/paušalu<sup><a href="#source-15" class="source-link">[15]</a></sup> i austrijskom mogućnošću korištenja "Pendlerpauschale".<sup><a href="#source-24" class="source-link">[24]</a></sup>
+                Nadalje, dok Hrvatska primjenjuje visoku stopu PDV-a od 25% na popravke bicikala<sup><a href="#source-6" class="source-link">[6]</a></sup>, <strong>Slovenija</strong> (9,5%)<sup><a href="#source-16" class="source-link">[16]</a></sup> i <strong>Austrija</strong> (10%)<sup><a href="#source-27" class="source-link">[27]</a></sup> nude značajno snižene stope, čineći održavanje pristupačnijim.
+                Izravna bespovratna sredstva za e-bicikle/teretne bicikle tvrtki također su robusnija i specifičnija u <strong>Austriji</strong> ("klimaaktiv mobil")<sup><a href="#source-28" class="source-link">[28]</a></sup> i <strong>Njemačkoj</strong> (BAFA program)<sup><a href="#source-46" class="source-link">[46]</a></sup> u usporedbi s hrvatskim oslanjanjem na šire, manje ciljane natječaje za financiranje.<sup><a href="#source-8" class="source-link">[8]</a></sup>
+                </p>
+            </div>
+        </section>
+
+        <section id="conclusion">
+            <h2>Zaključak: Hitna potreba za reformom biciklističkih politika u Hrvatskoj</h2>
+            <p>Usporedna analiza nedvojbeno pokazuje da Hrvatska ne drži korak s europskim predvodnicima u promicanju biciklizma. Iako postoje neke temeljne regulative za infrastrukturu, financijski i fiskalni poticaji ključni za poticanje široke primjene bicikala za putovanje na posao i poslovne svrhe ozbiljno nedostaju ili su nerazvijeni u usporedbi sa sveobuhvatnom podrškom viđenom u zemljama poput Austrije, Njemačke, pa čak i susjedne Slovenije.</p>
+            
+            <div class="critique">
+                <strong>Kako bi potaknula živahnu biciklističku kulturu i iskoristila njezine ekološke, zdravstvene i ekonomske prednosti, Hrvatska mora razmotriti odlučne korake kao što su:</strong>
+                <ul class="custom-bullets">
+                    <li>Uvođenje značajne neoporezive pogodnosti za bicikle koje osigurava poslodavac, daleko iznad trenutnog općeg limita dara od 133 €, možda po uzoru na austrijski €0 Sachbezug<sup><a href="#source-21" class="source-link">[21]</a></sup> ili njemačke neoporezive bicikle kao "dodatak na plaću".<sup><a href="#source-38" class="source-link">[38]</a></sup></li>
+                    <li>Uvođenje namjenske, porezno povoljne naknade za putovanje biciklom na posao (po kilometru ili paušalno) kako bi se izravno potaknuli zaposlenici, slično modelima u <strong>Francuskoj</strong><sup><a href="#source-30" class="source-link">[30]</a></sup>, <strong>Njemačkoj</strong><sup><a href="#source-42" class="source-link">[42]</a></sup> ili <strong>Sloveniji</strong>.<sup><a href="#source-15" class="source-link">[15]</a></sup></li>
+                    <li>Smanjenje stope PDV-a na popravke bicikala s trenutnih 25%, slijedeći primjer <strong>Slovenije</strong> (9,5%)<sup><a href="#source-16" class="source-link">[16]</a></sup> i <strong>Austrije</strong> (10%)<sup><a href="#source-27" class="source-link">[27]</a></sup>, kako bi održavanje postalo pristupačnije i potaknuo se duži vijek trajanja bicikala.</li>
+                    <li>Uspostavljanje jasnih, dostupnih i izdašnih nacionalnih programa bespovratnih sredstava specifično za poduzeća koja ulažu u e-bicikle, teretne bicikle i srodnu biciklističku infrastrukturu, učeći iz austrijskih "klimaaktiv mobil"<sup><a href="#source-28" class="source-link">[28]</a></sup> i njemačkih BAFA inicijativa.<sup><a href="#source-46" class="source-link">[46]</a></sup></li>
+                    <li>Jačanje i dosljedna provedba obveza za visokokvalitetna parkirališta za bicikle i neophodne sadržaje na kraju putovanja (tuševi, ormarići) na radnim mjestima, oslanjajući se na najbolje prakse iz <strong>Francuske</strong><sup><a href="#source-35" class="source-link">[35]</a></sup> ili austrijskih regionalnih propisa.<sup><a href="#source-48" class="source-link">[48]</a></sup></li>
+                    <li>Pokretanje sveobuhvatnih nacionalnih kampanja za promicanje biciklizma i jasno komuniciranje svih novih poticaja i mjera podrške dostupnih građanima i poduzećima.</li>
+                </ul>
+            </div>
+
+            <p>Bez odlučne akcije i promjene paradigme u politici, Hrvatska riskira daljnje zaostajanje, propuštajući transformacijski potencijal skromnog bicikla. Nacrti iz susjednih i vodećih europskih zemalja nude jasne, provjerene putove do uspjeha. Vrijeme je da Hrvatska 'ubaci u višu brzinu' i krene pedalirati prema održivijoj i biciklistički prihvatljivijoj budućnosti.</p>
+        </section>
+
+        <section id="sources_section">
+            <h2>Izvori</h2>
+            <ol class="source-list">
+                <li id="source-1"><a href="https://www.rrif.hr/neoporezivi_primitci_od_1_sijecnja_2025_godine-2411-vijest/" target="_blank">RRIF - Neoporezivi primitci od 1. siječnja 2025. godine</a></li>
+                <li id="source-2"><a href="https://www.zakon.hr/c/podzakonski-propis/3334/nn-95-05-od-03.08.2005.-pravilnik-o-porezu-na-dobit" target="_blank">Zakon.hr - Pravilnik o porezu na dobit (NN 95/05)</a></li>
+                <li id="source-3"><a href="https://narodne-novine.nn.hr/clanci/sluzbeni/2025_01_16_148.html" target="_blank">Narodne Novine - Službeni (Primjer: 2025_01_16_148)</a></li>
+                <li id="source-4"><a href="https://mrosp.gov.hr/istaknute-teme/visina-naknade-troskova-prijevoza-po-prijedjenom-kilometru/visina-naknade-troskova-prijevoza-po-prijedjenom-kilometru-25-veljace-2025/13617" target="_blank">MROSP - Visina naknade troškova prijevoza po prijeđenom kilometru (25. veljače 2025.)</a></li>
+                <li id="source-5"><a href="https://www.zakon.hr/c/podzakonski-propis/60043/pravilnik-o-porezu-na-dohodak-%E2%80%93-procisceni-tekst" target="_blank">Zakon.hr - Pravilnik o porezu na dohodak (pročišćeni tekst)</a></li>
+                <li id="source-6"><a href="https://www.zakon.hr/c/podzakonski-propis/60055/pravilnik-o-porezu-na-dodanu-vrijednost-%E2%80%93-procisceni-tekst" target="_blank">Zakon.hr - Pravilnik o porezu na dodanu vrijednost (pročišćeni tekst)</a></li>
+                <li id="source-7"><a href="https://planoporavka.gov.hr/" target="_blank">PlanOporavka.gov.hr - Nacionalni plan oporavka i otpornosti</a></li>
+                <li id="source-8"><a href="https://mzozt.gov.hr/UserDocsImages/Pristup%20informacijama/Indikativni%20plan%20natje%C4%8Daja%20za%202025..xlsx" target="_blank">MZOZT - Indikativni plan natječaja za 2025. (.xlsx)</a></li>
+                <li id="source-9"><a href="https://mmpi.gov.hr/UserDocsImages/dokumenti/INFRASTRUKTURA/Infrastruktura%207_23/NPRBI%2028-7_23/Prilog-4_Analiza_stanja%20_biciklistickog_prometa_u_Republici_Hrvatskoj.pdf" target="_blank">MMPI - Analiza stanja biciklističkog prometa u Republici Hrvatskoj (.pdf)</a></li>
+                <li id="source-10"><a href="https://www.zakon.hr/c/podzakonski-propis/16200/nn-28-16-od-30.03.2016.-pravilnik-o-biciklisti%C4%8Dkoj-infrastrukturi" target="_blank">Zakon.hr - Pravilnik o biciklističkoj infrastrukturi (NN 28/16)</a></li>
+                <li id="source-11"><a href="https://www.zakon.hr/z/78/zakon-o-sigurnosti-prometa-na-cestama" target="_blank">Zakon.hr - Zakon o sigurnosti prometa na cestama</a></li>
+                <li id="source-12"><a href="https://www.hzjz.hr/aktualnosti/globalni-tjedan-sigurnosti-cestovnog-prometa-2025/" target="_blank">HZJZ - Globalni tjedan sigurnosti cestovnog prometa 2025.</a></li>
+                <li id="source-13"><a href="https://taxslovenia.eu/resources/2024_taxnews/2025_SI_davcne_novosti.pdf" target="_blank">TaxSlovenia.eu - 2025 SI davčne novosti (.pdf)</a></li>
+                <li id="source-14"><a href="https://www.uradni-list.si/glasilo-uradni-list-rs/vsebina/2024-01-3309/zakon-o-spremembah-in-dopolnitvah-zakona-o-dohodnini-zdoh-2ab" target="_blank">Uradni List RS - Zakon o spremembah in dopolnitvah Zakona o dohodnini (ZDOh-2AB)</a></li>
+                <li id="source-15"><a href="https://fu.gov.si/fileadmin/Internet/Davki_in_druge_dajatve/Podrocja/Dohodnina/Dohodek_iz_zaposlitve/Opis/Povracila_stroskov_in_drugi_dohodki_iz_delovnega_razmerja.docx" target="_blank">FU.gov.si - Povračila stroškov in drugi dohodki iz delovnega razmerja (.docx)</a></li>
+                <li id="source-16"><a href="https://www.globalvatcompliance.com/vat-rates-in-slovenia/" target="_blank">Global VAT Compliance - Stope PDV-a u Sloveniji</a></li>
+                <li id="source-17"><a href="https://www.racunovodja.com/Clanek/4763" target="_blank">Racunovodja.com - Članak 4763 (Sniženi PDV na popravke bicikala)</a></li>
+                <li id="source-18"><a href="https://www.kolesa-newbike.si/subvencija-za-elektricno-kolo/" target="_blank">Kolesa-Newbike.si - Subvencija za električno kolo</a></li>
+                <li id="source-19"><a href="https://www.fu.gov.si/fileadmin/Internet/Davki_in_druge_dajatve/Podrocja/Dohodnina/Dohodek_iz_dejavnosti/Opis/Olajsava_za_digitalni_in_zeleni_prehod.docx" target="_blank">FU.gov.si - Olajšava za digitalni in zeleni prehod (.docx)</a></li>
+                <li id="source-20"><a href="https://pisrs.si/pregledPredpisa?id=PRAV14601" target="_blank">PISRS.si - Pravilnik (L-kategorija vozila za zelenu tranziciju)</a></li>
+                <li id="source-21"><a href="https://www.wko.at/oe/handel/elektrofahrraeder-steuer" target="_blank">WKO.at - Elektrofahrräder & Steuer (Električni bicikli i porez)</a></li>
+                <li id="source-22"><a href="https://findok.bmf.gv.at/volltext(suche:Standardsuche)?dokumentId=dca4ae0e-a5f3-4dac-9770-5e6dced9dfa5" target="_blank">BMF.gv.at Findok - Sachbezug Fahrräder (Primitak u naravi za bicikle) (dca4ae0e...)</a></li>
+                <li id="source-23"><a href="https://www.wko.at/entlohnung/bezugsumwandlung-ueberlassung-firmen-e-bike" target="_blank">WKO.at - Bezugsumwandlung Firmen E-Bike (Pretvaranje plaće za službeni E-bicikl)</a></li>
+                <li id="source-24"><a href="https://www.oesterreich.gv.at/themen/mobilitaet/rad_fahren/Seite.610700.html" target="_blank">Oesterreich.gv.at - Rad fahren (Vožnja biciklom - Pendlerpauschale, Kilometergeld)</a></li>
+                <li id="source-25"><a href="https://www.bmf.gv.at/themen/steuern/kraftfahrzeuge/kilometergeld.html" target="_blank">BMF.gv.at - Kilometergeld (Naknada po kilometru)</a></li>
+                <li id="source-26"><a href="https://www.wko.at/steuern/ermaessigte-umsatzsteuer-saetze" target="_blank">WKO.at - Ermäßigte Umsatzsteuersätze (Snižene stope PDV-a)</a></li>
+                <li id="source-27"><a href="https://www.bmf.gv.at/themen/steuern/fuer-unternehmen/umsatzsteuer/informationen/faq%E2%80%93aenderung-der-umsatzsteuersaetze-ab-1.1.2021-aufgrund-des-covid-19-steuerma%C3%9Fnahmengesetzes.html" target="_blank">BMF.gv.at - FAQ Änderung Umsatzsteuersätze (Promjena stopa PDV-a - COVID-19)</a></li>
+                <li id="source-28"><a href="https://www.cargobike.jetzt/kaufpraemien-ueberblick/" target="_blank">CargoBike.jetzt - Kaufprämien Überblick (Pregled poticaja za kupnju - Austrija)</a></li>
+                <li id="source-29"><a href="https://www.fahrradberatung.at/infothek/foerderungen/" target="_blank">Fahrradberatung.at - Förderungen (Poticaji - klimaaktiv mobil)</a></li>
+                <li id="source-30"><a href="https://payfit.com/fr/fiches-pratiques/forfait-mobilite-durable/" target="_blank">Payfit.com - Forfait mobilité durable (Paušal za održivu mobilnost)</a></li>
+                <li id="source-31"><a href="https://les-aides.fr/aide/QXQv3w/ddfip/reduction-d-impot-pour-mise-a-disposition-d-une-flotte-de-velos.html#:~:text=Ce%20dispositif%20a%20pour%20objectif,d'une%20flotte%20de%20v%C3%A9los." target="_blank">Les-Aides.fr - Réduction d'impôt flotte de vélos (Porezno umanjenje za vozni park bicikala)</a></li>
+                <li id="source-32"><a href="https://www.budget.gouv.fr/documentation/file-download/21084" target="_blank">Budget.gouv.fr - Dokumentacija o PDV-u (datoteka 21084)</a></li>
+                <li id="source-33"><a href="https://www.legifiscal.fr/tva/tva-francaise/tva-recuperable/exclusion-droit-deduction-tva-vehicules-tourisme-vehicules-vises-exceptions.html" target="_blank">Legifiscal.fr - TVA récupérable (Povrat PDV-a - gospodarska vozila)</a></li>
+                <li id="source-34"><a href="https://www.artisanat-bfc.fr/galerie/1/26b657ae117fc627f5b3e1d1c5fb9e39.pdf" target="_blank">Artisanat-BFC.fr - Pomoć za bicikle (.pdf)</a></li>
+                <li id="source-35"><a href="https://entreprendre.service-public.fr/vosdroits/F38482" target="_blank">Entreprendre.Service-Public.fr - Obligations stationnement vélos (Obveze parkiranja bicikala - F38482)</a></li>
+                <li id="source-36"><a href="https://www.ecologie.gouv.fr/politiques-publiques/velo-marche-modes-deplacement-vertueux-avantageux" target="_blank">Ecologie.gouv.fr - Plan Vélo et Marche 2023-2027 (Plan za biciklizam i pješačenje)</a></li>
+                <li id="source-37"><a href="https://bigmedia.bpifrance.fr/nos-dossiers/plan-de-mobilite-employeur-7-etapes-pour-le-mettre-en-place-en-entreprise" target="_blank">BPIFrance BigMedia - Plan de mobilité employeur (Plan mobilnosti poslodavca)</a></li>
+                <li id="source-38"><a href="https://www.steuern.de/jobrad-steuer" target="_blank">Steuern.de - Jobrad & Steuer (Službeni bicikl i porez)</a></li>
+                <li id="source-39"><a href="https://www.lease-a-bike.de/en/faq-arbeitgeber/tax-matters" target="_blank">Lease-a-Bike.de - FAQ Employer Tax Matters (Česta pitanja za poslodavce - porezna pitanja)</a></li>
+                <li id="source-40"><a href="https://belonio.de/journal/firmenrad/" target="_blank">Belonio.de - Firmenrad (Službeni bicikl)</a></li>
+                <li id="source-41"><a href="https://www.ternbicycles.com/en/explore/more-from-tern/2024-2025-e-bike-incentive-programs-europe#:~:text=In%20this%20case%2C%20your%20employer,repairs%20100%25%20tax%2Ddeductible." target="_blank">TernBicycles.com - Programi poticaja za e-bicikle u Europi (Njemačka)</a></li>
+                <li id="source-42"><a href="https://blog.pleo.io/de/kilometerpauschale-fahrrad" target="_blank">Pleo.io Blog - Kilometerpauschale Fahrrad (Paušalna naknada po kilometru za bicikl)</a></li>
+                <li id="source-43"><a href="https://factorialhr.de/blog/pendlerpauschale/" target="_blank">FactorialHR.de - Pendlerpauschale (Naknada za putnike)</a></li>
+                <li id="source-44"><a href="https://www.mobilexpense.com/de/blog/mehrwertsteuer-mehrwertsteuersaetze" target="_blank">Mobilexpense.com - Mehrwertsteuersätze Deutschland (Stope PDV-a u Njemačkoj)</a></li>
+                <li id="source-45"><a href="https://www.lobbyregister.bundestag.de/inhalte-der-interessenvertretung/regelungsvorhabensuche/RV0016429" target="_blank">Lobbyregister Bundestag - Regelungsvorhaben (Regulatorni prijedlog - RV0016429 - PDV na popravke bicikala)</a></li>
+                <li id="source-46"><a href="https://www.bafa.de/DE/Energie/Energieeffizienz/E-Lastenfahrrad/e-lastenfahrrad_node.html" target="_blank">BAFA.de - E-Lastenfahrrad Förderung (Poticaji za e-teretne bicikle)</a></li>
+                <li id="source-47"><a href="https://pisrs.si/pregledPredpisa?id=PRAV13447" target="_blank">PISRS.si - Pravilnik o kolesarskih površinah (Slovenija)</a></li>
+                <li id="source-48"><a href="https://www.wien.gv.at/verkehr/radfahren/radabstellanlagen.html" target="_blank">Wien.gv.at - Radabstellanlagen (Parkirališta za bicikle - primjer Bečkog građevinskog zakonika)</a></li>
+                <li id="source-49"><a href="https://www.wsm.eu/wp-content/downloads/de/wsm-fahrradparken-landesbauordnungen.pdf" target="_blank">WSM.eu - Fahrradparken Landesbauordnungen (Parkiranje bicikala prema državnim građevinskim propisima - .pdf, Njemačka)</a></li>
+            </ol>
+        </section>
+    </div>
+
+    <footer>
+        <p>Preliminarno istraživanje proveo Denis</p>
+    </footer>
+
 </body>
 </html>
